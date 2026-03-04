@@ -18,17 +18,18 @@ class HomeScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          const SizedBox(height: 16),
-          // Small Logo
+          const Spacer(),
+          // Logo
           SizedBox(
-            width: 100,
-            height: 100,
+            width: 120,
+            height: 120,
             child: Image.asset(
               "assets/splash.png",
               fit: BoxFit.contain,
             ),
           ),
           const SizedBox(height: 16),
+          // Nexetra Text
           const Text(
             "Nexetra",
             style: TextStyle(
@@ -37,7 +38,8 @@ class HomeScreen extends StatelessWidget {
               color: Colors.indigo,
             ),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 48),
+
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
@@ -46,7 +48,7 @@ class HomeScreen extends StatelessWidget {
                 buildTopButton(Icons.person, "Profile", onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const ProfileScreen()),
+                    MaterialPageRoute(builder: (context) =>  ProfileScreen()),
                   );
                 }),
                 buildTopButton(Icons.dashboard, "Job Board", onTap: () {
@@ -70,6 +72,7 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
           ),
+          const Spacer(flex: 2),
         ],
       ),
     );
@@ -88,7 +91,7 @@ class HomeScreen extends StatelessWidget {
                 BoxShadow(
                   color: Colors.black12,
                   blurRadius: 4,
-                  offset: Offset(2,2),
+                  offset: Offset(2, 2),
                 ),
               ],
             ),
