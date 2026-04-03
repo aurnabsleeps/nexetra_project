@@ -32,7 +32,7 @@ class ProfileScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(60.0),
               ),
-              child: Image.asset("assets/splash.png"),
+              child: Image.asset("asset/images/img_1.png"),
             ),
           ),
 
