@@ -1,148 +1,278 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'loginInfluencer.dart';
+import 'SettingsScreen.dart';
+import 'edit_profile.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       backgroundColor: Colors.white,
-
-      appBar: AppBar(
-        title: const Text("Influencer Profile"),
-        backgroundColor: Colors.indigo,
-      ),
-
-      body: Column(
-
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-
-        children: <Widget>[
-
-          const SizedBox(height: 10.0),
-
-          // Profile Logo in Circular Shape (using Container)
-          Center(
-            child: Container(
-              width: 120.0,
-              height: 120.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(60.0),
+      endDrawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                color: Colors.indigo,
               ),
-              child: Image.asset("asset/images/img_1.png"),
-            ),
-          ),
-
-          const  SizedBox(height: 10.0),
-
-          // Name
-          Container(
-            margin: const EdgeInsets.all(15.0),
-            child: const Text(
-              "Raisa Tabassum",
-              style: TextStyle(
-                fontSize: 24.0,
-                color: Colors.black,
-              ),
-            ),
-          ),
-
-          Container(
-            margin: const EdgeInsets.all(15.0),
-            child: const Text(
-              "Age: 23",
-              style: TextStyle(fontSize: 18.0),
-            ),
-          ),
-
-          // Social Media Card
-          Card(
-            margin: const EdgeInsets.all(15.0),
-            color: Colors.grey[200],
-            elevation: 5.0,
-
-            child: Container(
-              padding: const EdgeInsets.all(20.0),
-
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-
-                children: <Widget>[
-
-                  Text("Facebook Followers: 120K"),
-                  SizedBox(height: 8.0),
-
-                  Text("YouTube Subscribers: 85K"),
-                  SizedBox(height: 8.0),
-
-                  Text("Instagram Followers: 150K"),
-
+                children: [
+                  const CircleAvatar(
+                    radius: 30,
+                    backgroundImage: AssetImage("asset/images/img4.png"),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Menu',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
             ),
-          ),
+            ListTile(
+              leading: const Icon(Icons.edit, color: Colors.indigo),
+              title: const Text('Edit Profile', style: TextStyle(fontSize: 16)),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const EditProfile()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings, color: Colors.indigo),
+              title: const Text('Settings', style: TextStyle(fontSize: 16)),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.info, color: Colors.indigo),
+              title: const Text('About Us', style: TextStyle(fontSize: 16)),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.logout, color: Colors.redAccent),
+              title: const Text('Log Out', style: TextStyle(fontSize: 16, color: Colors.redAccent, fontWeight: FontWeight.bold)),
+              onTap: () async {
+                await FirebaseAuth.instance.signOut();
+                if (context.mounted) {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => loginInfluencer()),
+                    (Route<dynamic> route) => false,
+                  );
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
 
-          // Collaboration Info Card
-          Card(
-            margin: const EdgeInsets.all(15.0),
-            color: Colors.grey[200],
-            elevation: 5.0,
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                // Cover Image
+                Container(
+                  height: 220,
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("asset/images/download2.png"),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
 
-            child: Container(
-              padding: const EdgeInsets.all(20.0),
+                Container(
+                  height: 100,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.black.withOpacity(0.6),
+                        Colors.transparent,
+                      ],
+                    ),
+                  ),
+                ),
 
-              child: const Column(
+                SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            if (Navigator.canPop(context)) {
+                              Navigator.pop(context);
+                            }
+                          },
+                          child: const Row(
+                            children: [
+                              Icon(Icons.arrow_back_ios, color: Colors.white, size: 18),
+                              SizedBox(width: 4),
+                              Text("Back", style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                        ),
+                        Builder(
+                          builder: (context) {
+                            return GestureDetector(
+                              onTap: () {
+                                Scaffold.of(context).openEndDrawer();
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(6.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: const Icon(
+                                  Icons.menu,
+                                  color: Colors.indigo,
+                                  size: 24,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                Positioned(
+                  bottom: -45,
+                  left: 24,
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 3),
+                      image: const DecorationImage(
+                        image: AssetImage("asset/images/img4.png"),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            
+            const SizedBox(height: 60),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-
-                children: <Widget>[
-
-                  Text("Past Collaborations: 32"),
-                  SizedBox(height: 8.0),
-
-                  Text("Total Collaborations: 32"),
-                  SizedBox(height: 8.0),
-
-                  Text("Rating: 4.8 / 5"),
-                  SizedBox(height: 8.0),
-
-                  Text("Pending Jobs: 3"),
-                  SizedBox(height: 8.0),
-
-                  Text("Total Offers Received: 58"),
-
+                children: [
+                  const Text(
+                    "David Adam",
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black87),
+                  ),
+                  const SizedBox(height: 6),
+                  const Text(
+                    "Model  •  UI Designer",
+                    style: TextStyle(fontSize: 15, color: Colors.black54, fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 24),
+                  
+                  const Row(
+                    children: [
+                      Icon(Icons.cake_outlined, color: Colors.black54, size: 20),
+                      SizedBox(width: 8),
+                      Text("24th Aug, 2003", style: TextStyle(color: Colors.black87, fontSize: 15, fontWeight: FontWeight.w600)),
+                      SizedBox(width: 32),
+                      Icon(Icons.location_on_outlined, color: Colors.black54, size: 20),
+                      SizedBox(width: 8),
+                      Text("Dhaka", style: TextStyle(color: Colors.black87, fontSize: 15, fontWeight: FontWeight.w600)),
+                    ],
+                  ),
+                  
+                  const SizedBox(height: 24),
+                  Divider(color: Colors.grey[300], thickness: 1),
+                  const SizedBox(height: 20),
+                  
+                  // Stats
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _buildStatColumn("448", "Followers"),
+                      _buildStatColumn("85 ", "Following"),
+                      _buildStatColumn("55", "Collabs"),
+                    ],
+                  ),
+                  
+                  const SizedBox(height: 20),
+                  Divider(color: Colors.grey[300], thickness: 1),
+                  const SizedBox(height: 24),
+                  
+                  // About me
+                  const Text(
+                    "About me",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
+                  ),
+                  const SizedBox(height: 16),
+                  RichText(
+                    text: const TextSpan(
+                      style: TextStyle(color: Colors.black87, fontSize: 15, height: 1.5),
+                      children: [
+                        TextSpan(
+                          text:  "Hi. It's me.",
+                        ),
+                      ],
+                    ),
+                  ),
+                  
+                  const SizedBox(height: 40),
                 ],
               ),
             ),
-          ),
-
-          const SizedBox(height: 20.0),
-
-          // Button Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
-            children: <Widget>[
-
-              ElevatedButton(
-                onPressed: () {},
-                child: const Text("Edit Profile"),
-              ),
-
-              ElevatedButton(
-                onPressed: () {},
-                child: const Text("View Offers"),
-              ),
-
-            ],
-          ),
-
-        ],
+          ],
+        ),
       ),
+    );
+  }
+
+  Widget _buildStatColumn(String value, String label) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          value,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 14, color: Colors.black54, fontWeight: FontWeight.w600),
+        ),
+      ],
     );
   }
 }
