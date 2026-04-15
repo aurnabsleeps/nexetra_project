@@ -3,6 +3,9 @@ import 'profile_screen.dart';
 import 'jobboard_screen.dart';
 import 'appliedjob_screen.dart';
 import 'confirmedjob_screen.dart';
+import 'cancelled_jobs.dart';
+import 'about_us.dart';
+import 'loginInfluencer.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -10,98 +13,118 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.indigo,
-        elevation: 0,
-        toolbarHeight: 0,
-      ),
-      body: Column(
-        children: [
-          const Spacer(),
-          // Logo
-          SizedBox(
-            width: 200,
-            height: 180,
-            child: Image.asset(
-              "asset/images/img_1.png",
-              fit: BoxFit.contain,
+        title: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Welcome!",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          // Nexetra Text
-          const Text(
-            "Nexetra",
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: Colors.indigo,
+            Text(
+              "Nexetra",
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          ),
-          const SizedBox(height: 48),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                buildTopButton(Icons.person, "Profile", onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) =>  const ProfileScreen()),
-                  );
-                }),
-                buildTopButton(Icons.dashboard, "Job Board", onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const JobBoardScreen()),
-                  );
-                }),
-                buildTopButton(Icons.task_alt, "Applied Job", onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const AppliedJobScreen()),
-                  );
-                }),
-                buildTopButton(Icons.check_circle, "Confirmed Job", onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const ConfirmedJobScreen()),
-                  );
-                }),
-              ],
-            ),
-          ),
-          const Spacer(flex: 2),
+          ],
+        ),
+        actions: [
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert, color: Colors.white),
+            onSelected: (value) {
+              if (value == "about") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AboutUs(),
+                  ),
+                );
+              } else if (value == "logout") {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => loginInfluencer(),
+                  ),
+                      (route) => false,
+                );
+              }
+            },
+            itemBuilder: (context) => const [
+              PopupMenuItem(
+                value: "about",
+                child: Text("About Us"),
+              ),
+              PopupMenuItem(
+                value: "logout",
+                child: Text("Logout"),
+              ),
+            ],
+          )
         ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: GridView.count(
+          crossAxisCount: 2,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+          children: [
+            buildButton(context, Icons.person, "Profile",
+                const ProfileScreen()),
+            buildButton(context, Icons.dashboard, "Job Board",
+                const JobBoardScreen()),
+            buildButton(context, Icons.task_alt, "Applied",
+                const AppliedJobScreen()),
+            buildButton(context, Icons.check_circle, "Confirmed",
+                const ConfirmedJobScreen()),
+            buildButton(context, Icons.cancel, "Cancelled",
+                const CancelledJobs()),
+          ],
+        ),
       ),
     );
   }
 
-  Widget buildTopButton(IconData icon, String label, {required VoidCallback onTap}) {
-    return Column(
-      children: [
-        GestureDetector(
-          onTap: onTap,
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 4,
-                  offset: Offset(2, 2),
-                ),
-              ],
-            ),
-            padding: const EdgeInsets.all(16),
-            child: Icon(icon, color: Colors.indigo, size: 28),
-          ),
+  Widget buildButton(
+      BuildContext context,
+      IconData icon,
+      String label,
+      Widget page,
+      ) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => page),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.indigo,
+          borderRadius: BorderRadius.circular(12),
         ),
-        const SizedBox(height: 8),
-        Text(label, style: const TextStyle(color: Colors.black)),
-      ],
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: Colors.white, size: 28),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
